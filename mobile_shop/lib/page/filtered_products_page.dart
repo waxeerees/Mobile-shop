@@ -6,7 +6,6 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:mobile_shop/data/tags.dart';
 import 'package:mobile_shop/model/cart_item.dart';
 import 'package:mobile_shop/page/cart_page.dart';
-import 'package:mobile_shop/page/product_manager.dart';
 import 'package:mobile_shop/page/product_page.dart';
 import 'package:mobile_shop/provider/shop_provider.dart';
 import 'package:mobile_shop/transitions/custom_page_route.dart';
@@ -42,7 +41,7 @@ class _ProductsPageState extends State<ProductsPage> {
         //     blurRadius: 0.0,
         //   ),
         // ],
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       drawer: SafeArea(
         child: Container(
@@ -79,13 +78,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   title: Text('Profile'),
                 ),
                 ListTile(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProductManager()),
-                    );
-                  },
+                  onTap: () {},
                   leading: Icon(Icons.favorite),
                   title: Text('Favourites'),
                 ),

@@ -82,7 +82,6 @@ class ProductPage extends StatelessWidget {
 
               //   provider.tag = Tags.imageCart(product.imgUrl);
               provider.items.add(product);
-              print("Product is added to the cart: ${provider.items}");
 
               Navigator.of(context).pop();
             },

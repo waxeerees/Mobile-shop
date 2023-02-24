@@ -86,9 +86,12 @@ class ShopProvider extends ChangeNotifier {
   /// cart from the outside.
   void add(CartItem item, {required CartItem product}) {
     _items.add(item);
+
     // This call tells the widgets that are listening to this model to rebuild.
     notifyListeners();
   }
+
+  int getPrice() => totalPrice;
 
   /// Removes all items from the cart.
   void removeAll() {

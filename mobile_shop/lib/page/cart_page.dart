@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile_shop/model/cart_item.dart';
 import 'package:mobile_shop/provider/shop_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,8 +11,10 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formatCurrency = NumberFormat.simpleCurrency();
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFFf6f5ee),
       body: Padding(
         padding: const EdgeInsets.all(28),
         child: Column(
@@ -25,13 +28,16 @@ class CartPage extends StatelessWidget {
                   'Cart',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Color.fromARGB(255, 0, 0, 0),
                     fontSize: 32,
                   ),
                 ),
                 FlatButton(
-                  onPressed: () {},
-                  textColor: Colors.white,
+                  onPressed: () {
+                    Provider.of<ShopProvider>(context, listen: false)
+                        .removeAll();
+                  },
+                  textColor: Color.fromARGB(255, 136, 0, 0),
                   child: Text('Clear Cart'),
                 ),
               ],
@@ -47,16 +53,35 @@ class CartPage extends StatelessWidget {
               children: [
                 Text(
                   'Total:',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                Text(
-                  '\$80.00',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 32,
-                    color: Colors.white,
-                  ),
-                )
+                      color: Color.fromARGB(255, 0, 0, 0), fontSize: 18),
+                ),
+                Consumer<ShopProvider>(builder: (context, cart, child) {
+                  if (cart.items.isEmpty) {
+                    return Text(
+                      formatCurrency.format(0.00),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    );
+                  } else {
+                    var totalPrice = 0.00;
+                    for (var item in cart.items) {
+                      totalPrice += item.price * item.quantity;
+                    }
+
+                    return Text(
+                      '${formatCurrency.format(totalPrice)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                    );
+                  }
+                }),
               ],
             ),
             SizedBox(height: 24),
@@ -90,22 +115,6 @@ class CartPage extends StatelessWidget {
         children: cart.items.map(buildCardItem).toList(),
       );
     });
-    /*
-    final provider = Provider.of<ShopProvider>(context);
-
-    if (provider.items.isEmpty) {
-      return Center(
-        child: Text(
-          'Cart Is Empty',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      );
-    } else {
-      return ListView(
-        physics: BouncingScrollPhysics(),
-        children: provider.items.map(buildCardItem).toList(),
-      );
-    } */
   }
 
   Widget buildCardItem(CartItem cartItem) => ListTile(
@@ -116,14 +125,14 @@ class CartPage extends StatelessWidget {
           children: [
             Text(
               '${cartItem.quantity}x',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
             ),
             SizedBox(width: 10),
             Expanded(
               child: Text(
                 cartItem.title,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 0, 0, 0),
                   fontWeight: FontWeight.bold,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -134,7 +143,7 @@ class CartPage extends StatelessWidget {
         ),
         trailing: Text(
           '\$${cartItem.price}',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
         ),
       );
 }
