@@ -115,7 +115,7 @@ class ProductPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildQuantity(),
+                BuiltQuatity(),
                 Text(
                   '\$' + product.price.toStringAsFixed(2),
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
@@ -156,6 +156,62 @@ class ProductPage extends StatelessWidget {
             minWidth: 60,
             child: Text('+', style: style),
             onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BuiltQuatity extends StatefulWidget {
+  const BuiltQuatity({super.key});
+
+  @override
+  State<BuiltQuatity> createState() => _BuiltQuatityState();
+}
+
+int quantity = 1;
+
+class _BuiltQuatityState extends State<BuiltQuatity> {
+  final style = TextStyle(fontWeight: FontWeight.bold, fontSize: 22);
+
+  @override
+  void initState() {
+    super.initState();
+    quantity = 1;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(24)),
+        border: Border.all(color: Colors.black26),
+      ),
+      child: Row(
+        children: [
+          MaterialButton(
+            minWidth: 60,
+            child: Text('—', style: style),
+            onPressed: () {
+              setState(() {
+                if (quantity > 1) {
+                  quantity = quantity - 1;
+                } else {
+                  quantity = 1;
+                }
+              });
+            },
+          ),
+          Text(quantity.toString(), style: style),
+          MaterialButton(
+            minWidth: 60,
+            child: Text('+', style: style),
+            onPressed: () {
+              setState(() {
+                quantity = quantity + 1;
+              });
+            },
           ),
         ],
       ),

@@ -15,5 +15,16 @@ class CartItem {
     required this.price,
     required this.description,
     required this.content,
+    required category,
   });
+
+  static CartItem fromJson(Map<String, dynamic> json) => CartItem(
+      imgUrl: json['imgUrl'],
+      id: json['id'],
+      title: json['title'],
+      quantity: json['quantity'],
+      price: json['price'],
+      description: json['description'],
+      content: json['content'],
+      category: json['category']);
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:mobile_shop/model/cart_item.dart';
 
 List<CartItem> products = [
@@ -10,6 +12,7 @@ List<CartItem> products = [
     imgUrl: 'assets/monster.png',
     quantity: 1,
     content: '250ml',
+    category: 'Textiles',
   ),
   CartItem(
     id: '2',
@@ -20,6 +23,7 @@ List<CartItem> products = [
     imgUrl: 'assets/mountdew.png',
     quantity: 2,
     content: '300ml',
+    category: 'Shoes',
   ),
   CartItem(
     id: '3',
@@ -30,6 +34,7 @@ List<CartItem> products = [
     imgUrl: 'assets/pepsi.png',
     quantity: 1,
     content: '250ml',
+    category: 'Bags',
   ),
   CartItem(
     id: '4',
@@ -40,6 +45,7 @@ List<CartItem> products = [
     imgUrl: 'assets/redbull.png',
     quantity: 2,
     content: '200ml',
+    category: 'Jewelries',
   ),
   CartItem(
     id: '5',
@@ -50,6 +56,7 @@ List<CartItem> products = [
     imgUrl: 'assets/sevenup.png',
     quantity: 1,
     content: '250ml',
+    category: 'Veils',
   ),
   CartItem(
     id: '6',
@@ -60,5 +67,6 @@ List<CartItem> products = [
     imgUrl: 'assets/cocacola.png',
     quantity: 2,
     content: '250ml',
+    category: 'Veils',
   ),
 ];

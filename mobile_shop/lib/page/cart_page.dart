@@ -84,6 +84,13 @@ class CartPage extends StatelessWidget {
   }
 
   Widget buildCardItems(BuildContext context) {
+    return Consumer<ShopProvider>(builder: (context, cart, child) {
+      return ListView(
+        physics: BouncingScrollPhysics(),
+        children: cart.items.map(buildCardItem).toList(),
+      );
+    });
+    /*
     final provider = Provider.of<ShopProvider>(context);
 
     if (provider.items.isEmpty) {
@@ -98,7 +105,7 @@ class CartPage extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         children: provider.items.map(buildCardItem).toList(),
       );
-    }
+    } */
   }
 
   Widget buildCardItem(CartItem cartItem) => ListTile(

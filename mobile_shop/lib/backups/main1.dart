@@ -11,8 +11,8 @@ Future main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ShopProvider()),
-        //  ChangeNotifierProvider(create: (_) => readProducts())
+        ChangeNotifierProvider(create: (context) => ShopProvider()),
+        // Provider(create: (context) => SomeOtherClass()),
       ],
       child: MyApp(),
     ),
