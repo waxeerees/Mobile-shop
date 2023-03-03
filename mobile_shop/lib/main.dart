@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_shop/page/login_page.dart';
 import 'package:mobile_shop/page/products_page.dart';
 
 import 'package:mobile_shop/provider/shop_provider.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
             primaryColorDark: Colors.white,
             primaryColorLight: Colors.white,
           ),
-          home: ProductsPage(), //CartPage(),
+          home: LoginScreen(), //CartPage(),
         ),
       );
 }
