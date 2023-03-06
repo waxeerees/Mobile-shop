@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, unused_local_variable, prefer_const_declarations
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:mobile_shop/data/tags.dart';
 import 'package:mobile_shop/model/cart_item.dart';
 import 'package:mobile_shop/page/cart_page.dart';
+import 'package:mobile_shop/page/login_page.dart';
 import 'package:mobile_shop/page/product_manager.dart';
 import 'package:mobile_shop/page/product_page.dart';
 import 'package:mobile_shop/provider/shop_provider.dart';
@@ -25,7 +28,8 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return AdvancedDrawer(
-      backdropColor: Colors.blueGrey,
+      backdropColor: Color.fromARGB(255, 210, 219, 223),
+
       controller: _advancedDrawerController,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 300),
@@ -34,39 +38,39 @@ class _ProductsPageState extends State<ProductsPage> {
       // openScale: 1.0,
       disabledGestures: false,
       childDecoration: const BoxDecoration(
-        // NOTICE: Uncomment if you want to add shadow behind the page.
-        // Keep in mind that it may cause animation jerks.
-        // boxShadow: <BoxShadow>[
-        //   BoxShadow(
-        //     color: Colors.black12,
-        //     blurRadius: 0.0,
-        //   ),
-        // ],
         borderRadius: const BorderRadius.all(Radius.circular(16)),
       ),
       drawer: SafeArea(
         child: Container(
           child: ListTileTheme(
-            textColor: Colors.white,
-            iconColor: Colors.white,
+            textColor: Colors.black,
+            iconColor: Colors.black,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Container(
-                  width: 128.0,
-                  height: 128.0,
-                  margin: const EdgeInsets.only(
-                    top: 24.0,
-                    bottom: 64.0,
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(
-                    'assets/flutter_logo.jpg',
-                  ),
+                Column(
+                  children: [
+                    Container(
+                      width: 128.0,
+                      height: 128.0,
+                      margin: const EdgeInsets.only(
+                        top: 24.0,
+                        bottom: 14.0,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: Colors.black26,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Image.asset(
+                        'assets/flutter_logo.jpg',
+                      ),
+                    ),
+                    Center(child: UserLabel()),
+                    SizedBox(
+                      height: 30,
+                    )
+                  ],
                 ),
                 ListTile(
                   onTap: () {},
@@ -104,6 +108,13 @@ class _ProductsPageState extends State<ProductsPage> {
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
                 ),
+                ListTile(
+                  onTap: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  leading: Icon(Icons.arrow_back_rounded),
+                  title: Text('Log Out'),
+                ),
                 Spacer(),
                 DefaultTextStyle(
                   style: TextStyle(
@@ -123,47 +134,46 @@ class _ProductsPageState extends State<ProductsPage> {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Color(0xFFf6f5ee),
-        appBar: AppBar(
-          title: Text(
-            MyApp.title,
-            style: TextStyle(color: Colors.black),
-          ),
-          leading: IconButton(
-            onPressed: _handleMenuButtonPressed,
-            icon: ValueListenableBuilder<AdvancedDrawerValue>(
-              valueListenable: _advancedDrawerController,
-              builder: (_, value, __) {
-                return AnimatedSwitcher(
-                  duration: Duration(milliseconds: 250),
-                  child: Icon(
-                    value.visible ? Icons.clear : Icons.menu,
-                    key: ValueKey<bool>(value.visible),
-                    color: Colors.black,
-                  ),
-                );
-              },
+          backgroundColor: Color(0xFFf6f5ee),
+          appBar: AppBar(
+            title: Text(
+              MyApp.title,
+              style: TextStyle(color: Colors.black),
             ),
-          ),
-          centerTitle: true,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.filter_list, color: Colors.black),
-              onPressed: () {},
+            leading: IconButton(
+              onPressed: _handleMenuButtonPressed,
+              icon: ValueListenableBuilder<AdvancedDrawerValue>(
+                valueListenable: _advancedDrawerController,
+                builder: (_, value, __) {
+                  return AnimatedSwitcher(
+                    duration: Duration(milliseconds: 250),
+                    child: Icon(
+                      value.visible ? Icons.clear : Icons.menu,
+                      key: ValueKey<bool>(value.visible),
+                      color: Colors.black,
+                    ),
+                  );
+                },
+              ),
             ),
-            const SizedBox(width: 4),
-          ],
-        ),
-        body: Container(
-          child: Stack(
-            children: [
-              buildProducts(),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.filter_list, color: Colors.black),
+                onPressed: () {},
+              ),
+              const SizedBox(width: 4),
             ],
           ),
-        ),
-      ),
+          body: Container(
+            child: Stack(
+              children: [
+                buildProducts(),
+              ],
+            ),
+          )),
     );
   }
 
@@ -173,7 +183,18 @@ class _ProductsPageState extends State<ProductsPage> {
     return StreamBuilder<List<CartItem>>(
         stream: readProducts(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+                child: AlertDialog(
+              title: Text("Error"),
+              content:
+                  Text("Somethin is wrong, check your internet connection"),
+            ));
+          } else if (snapshot.hasData) {
             final productItems = snapshot.data!;
             return GridView(
               padding: EdgeInsets.all(spacing),
@@ -250,6 +271,40 @@ class _ProductsPageState extends State<ProductsPage> {
     // _advancedDrawerController.value = AdvancedDrawerValue.visible();
     _advancedDrawerController.showDrawer();
   }
+}
+
+class UserLabel extends StatefulWidget {
+  const UserLabel({super.key});
+
+  @override
+  State<UserLabel> createState() => _UserLabelState();
+}
+
+class _UserLabelState extends State<UserLabel> {
+  @override
+  Widget build(BuildContext context) => StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final user = FirebaseAuth.instance.currentUser!;
+            return Text(
+              user.email!,
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black,
+                  fontSize: 16),
+            );
+          } else {
+            return Text(
+              "You are not logged In!",
+              style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.red,
+                  fontSize: 16),
+            );
+          }
+        },
+      );
 }
 
 Stream<List<CartItem>> readProducts() => FirebaseFirestore.instance

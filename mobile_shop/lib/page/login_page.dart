@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,6 +15,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isRememberMe = false;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
 
   Widget buildEmail() {
     return Column(
@@ -34,6 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ]),
           height: 60,
           child: TextField(
+            controller: emailController,
+            textInputAction: TextInputAction.next,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black12),
             decoration: InputDecoration(
@@ -69,6 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ]),
           height: 60,
           child: TextField(
+            controller: passwordController,
+            textInputAction: TextInputAction.done,
             obscureText: true,
             style: TextStyle(color: Colors.black12),
             decoration: InputDecoration(
@@ -124,7 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () => print("Login button is pressed"),
+        onPressed: () {
+          signIn();
+        },
         padding: EdgeInsets.all(25),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         color: Colors.white,
@@ -209,5 +228,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future signIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim());
   }
 }

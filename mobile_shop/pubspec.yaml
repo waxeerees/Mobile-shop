@@ -49,6 +49,7 @@ dependencies:
   intl: ^0.18.0
   google_sign_in: ^6.0.1
   google_sign_in_android: ^6.1.7
+  firebase_auth: ^4.2.2
 
   
 
